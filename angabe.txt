@@ -5,4 +5,4 @@
 �	Normalverteilungstest auch f�r das Portfolio 
 �	Ermitteln von Korrelation und Beta der Einzelzeitreihen mit dem Portfolio 
 
-David war hier zum zweiten Mal und zum dritten Mal
+David war hier zum zweiten Mal und zum dritten Mal und 4
