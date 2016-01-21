@@ -5,6 +5,5 @@
 •	Normalverteilungstest auch für das Portfolio 
 •	Ermitteln von Korrelation und Beta der Einzelzeitreihen mit dem Portfolio 
 
-
-Bernard auch
+Bernhard Merge Test
 Dieni war hier!!
