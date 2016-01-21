@@ -4,3 +4,7 @@
 •	Zusammenstellen eines Portfolios aus Einzeltiteln und Ableiten einer Portfolio-Zeitreihe 
 •	Normalverteilungstest auch für das Portfolio 
 •	Ermitteln von Korrelation und Beta der Einzelzeitreihen mit dem Portfolio 
+
+
+
+Dieni war hier!!
