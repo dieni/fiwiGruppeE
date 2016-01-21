@@ -1,8 +1,10 @@
-�	Kovarianzmatrix, Durchschnittsrenditen, Volatililt�ten 
-�	Normalverteilungstest der Renditen (auch grafisch mittels QQ-Plot) 
-�	Test auf Autokorrelationen in den Zeitreihen 
-�	Zusammenstellen eines Portfolios aus Einzeltiteln und Ableiten einer Portfolio-Zeitreihe 
-�	Normalverteilungstest auch f�r das Portfolio 
-�	Ermitteln von Korrelation und Beta der Einzelzeitreihen mit dem Portfolio 
+•	Kovarianzmatrix, Durchschnittsrenditen, Volatililtäten 
+•	Normalverteilungstest der Renditen (auch grafisch mittels QQ-Plot) 
+•	Test auf Autokorrelationen in den Zeitreihen 
+•	Zusammenstellen eines Portfolios aus Einzeltiteln und Ableiten einer Portfolio-Zeitreihe 
+•	Normalverteilungstest auch für das Portfolio 
+•	Ermitteln von Korrelation und Beta der Einzelzeitreihen mit dem Portfolio 
 
-David war hier zum zweiten Mal und zum dritten Mal und 4 5. mal
+
+
+Dieni war hier!!
