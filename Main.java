@@ -8,11 +8,10 @@ public class Main {
 		
 		Portfolio portfolio = new Portfolio();
 
-		String filePath = "C:/Users/rockw/Documents/eclipseWorkspace/FiwiZeitreihenanalyse/src/apple0914.csv";
-		
+		String filePath = "C:/Users/Dieni/Documents/eclipseWorkspace/Zeitreihenanalyse/src/apple0914.csv";
 		portfolio.importStockCourse(filePath);
 		
-		filePath = "C:/Users/rockw/Documents/eclipseWorkspace/FiwiZeitreihenanalyse/src/msft.csv";
+		filePath = "C:/Users/Dieni/Documents/eclipseWorkspace/Zeitreihenanalyse/src/msft0914.csv";
 		portfolio.importStockCourse(filePath);
 		
 		portfolio.printStockCourse(0);
