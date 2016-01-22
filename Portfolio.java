@@ -14,6 +14,14 @@ public class Portfolio {
 
 	List<StockCourse> courses = new ArrayList<StockCourse>();
 
+	public List<StockCourse> getCourses() {
+		return courses;
+	}
+
+	public void setCourses(List<StockCourse> courses) {
+		this.courses = courses;
+	}
+
 	/**
 	 * Add a new course to portfolio
 	 * @param sC

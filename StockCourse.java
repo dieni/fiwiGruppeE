@@ -77,12 +77,14 @@ public class StockCourse {
 	}
 
 	/**
-	 * Print the stock course
+	 * Print the stock course with all its statistical informations.
 	 */
 	public void printStockCourse() {
 		
 		System.out.println("--------------------------------------------------------------");
 		System.out.println("StockCourse: " + getName() + '\n');
+		System.out.println("Mean: " + getMean());
+		System.out.println("Volatility: " + getVolatility());
 		
 		for (DailyValue dV : course) {
 
@@ -91,5 +93,18 @@ public class StockCourse {
 		}
 	}
 	
+	/**
+	 * Calculate the mean of the course.
+	 */
+	public float getMean(){
+		Statistics s = new Statistics(this);
+		return s.getMean();
+		
+	}
+	
+	public float getVolatility(){
+		Statistics s = new Statistics(this);
+		return s.getStdDev();
+	}
 
 }
