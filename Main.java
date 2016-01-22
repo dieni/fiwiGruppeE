@@ -1,25 +1,26 @@
 package fiwiGruppeE;
 
-
-
 public class Main {
 
 	public static void main(String[] args) {
+
+		String filePath;
 		
+		// Create an empty portfolio
 		Portfolio portfolio = new Portfolio();
 
-		String filePath = "C:/Users/Dieni/Documents/eclipseWorkspace/Zeitreihenanalyse/src/apple0914.csv";
-		portfolio.importStockCourse(filePath);
-		
-		filePath = "C:/Users/Dieni/Documents/eclipseWorkspace/Zeitreihenanalyse/src/msft0914.csv";
-		portfolio.importStockCourse(filePath);
-		
-		portfolio.printStockCourse(0);
-		System.out.println("--------------------------------------------------------------");
-		portfolio.printStockCourse(1);
-		
-	}
-	
-	
-}
+		// Add a stock course to portfolio
+		filePath = "C:/Users/Dieni/Documents/eclipseWorkspace/Zeitreihenanalyse/src/apple0914.csv";
+		portfolio.addStockCourse(new StockCourse(filePath));
 
+		//Add another stock course to portfolio
+		filePath = "C:/Users/Dieni/Documents/eclipseWorkspace/Zeitreihenanalyse/src/msft0914.csv";
+		portfolio.addStockCourse(new StockCourse(filePath));
+
+		
+		//Print all stock courses from portfolio
+		portfolio.printPortfolio();
+
+	}
+
+}

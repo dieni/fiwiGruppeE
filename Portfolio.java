@@ -1,61 +1,34 @@
 package fiwiGruppeE;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 
+ * @author Christian Dienbauer
+ * 
+ * Contains one or more courses
+ *
+ */
 public class Portfolio {
 
-	List<ArrayList<DailyValue>> portfolio = new ArrayList<ArrayList<DailyValue>>();
+	List<StockCourse> courses = new ArrayList<StockCourse>();
 
-	public void importStockCourse(String filePathCSV) {
+	/**
+	 * Add a new course to portfolio
+	 * @param sC
+	 */
+	public void addStockCourse(StockCourse sC) {
 
-		List<DailyValue> stockCourse = new ArrayList<DailyValue>();
-
-		BufferedReader br = null;
-		String line = "";
-		String csvSplitBy = ",";
-
-		try {
-			br = new BufferedReader(new FileReader(filePathCSV));
-
-			br.readLine();
-
-			while ((line = br.readLine()) != null) {
-
-				String[] dailyValue = line.split(csvSplitBy);
-				stockCourse.add(new DailyValue(dailyValue[0], dailyValue[6]));
-
-			}
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-		portfolio.add((ArrayList<DailyValue>) stockCourse);
+		courses.add(sC);
 	}
-
-	public void printStockCourse(int index) {
-
-		List<DailyValue> stockCourse = portfolio.get(index);
-
-		for (DailyValue dv : stockCourse) {
-
-			System.out.println("Date: " + dv.getDate() + " Value: " + dv.getValue());
-
+	
+	/**
+	 * Prints all courses from the portfolio
+	 */
+	public void printPortfolio(){
+		for(StockCourse sC : courses){
+			sC.printStockCourse();
 		}
 	}
 
