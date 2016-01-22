@@ -20,6 +20,10 @@ public class Main {
 		
 		//Print all stock courses from portfolio
 		portfolio.printPortfolio();
+		System.out.println("Varianz1: " + portfolio.getCourses().get(0).getVariance());
+		System.out.println("Varianz2: " + portfolio.getCourses().get(1).getVariance());
+		System.out.println("Covariance: " + portfolio.getCourses().get(0).getCovariance(portfolio.getCourses().get(1)));
+		
 
 	}
 

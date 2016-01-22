@@ -18,7 +18,7 @@ public class Statistics {
 		setCourse(sC.getCourse());
 		setSize(sC.getCourse().size());
 	}
-	
+
 	float getMean() {
 
 		float sum = 0;
@@ -47,6 +47,26 @@ public class Statistics {
 	 */
 	float getStdDev() {
 		return (float) Math.sqrt(getVariance());
+	}
+
+	float getCovariance(StockCourse sC) {
+		Statistics sCS = new Statistics(sC);
+
+		float mean1 = getMean();
+		float mean2 = sCS.getMean();
+		float temp = 0;
+		int count = 0;
+
+		for (DailyValue dV : course) {
+			for (DailyValue dV2 : sC.getCourse()) {
+				if (dV.getDate().equals(dV2.getDate())){
+					temp += (mean1 - dV.getValue()) * (mean2 - dV2.getValue());
+					count++;
+				}
+			}
+		}
+
+		return temp/count;
 	}
 
 	public void setCourse(List<DailyValue> c) {
