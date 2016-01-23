@@ -1,5 +1,7 @@
 package fiwiGruppeE;
 
+import javax.swing.JFrame;
+
 public class Main {
 
 	public static void main(String[] args) {
@@ -25,6 +27,12 @@ public class Main {
 		System.out.println("Covariance: " + portfolio.getCourses().get(0).getCovariance(portfolio.getCourses().get(1)));
 		
 
+		
+		
+		
+		//Covariance-Matrix
+		portfolio.displayCovarianceMatrix();
+		
 	}
 
 }

@@ -1,7 +1,12 @@
 package fiwiGruppeE;
 
+import java.awt.print.PrinterException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JFrame;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /**
  * 
@@ -40,6 +45,49 @@ public class Portfolio {
 		}
 	}
 	
+	public void displayCovarianceMatrix(){
+		
+		//Create as much columns as there are courses + one
+		String[] columns = new String[courses.size()+1];
+		
+		
+		//Create Table without rows
+		DefaultTableModel tableModel = new DefaultTableModel(columns,0);
+		JTable table = new JTable(tableModel);
+		
+		//Create an object for inserting data
+		Object[] data = new Object[courses.size()+1];
+		
+		//Name columns
+		int i = 1;
+		for(StockCourse sC : courses){
+			
+			data[i++] = sC.getName();
+			//Insert data
+			tableModel.addRow(data);
+		}
+		
+		//Generate covariance-matrix 
+		for(StockCourse sC : courses){
+			i=0; //reset counter
+			data[i++] = sC.getName();
+			for(StockCourse sC2 : courses){
+				data[i++] = sC.getCovariance(sC2);
+			}
+			//Insert data
+			tableModel.addRow(data);
+		}
+		
+		//Show table within frame
+		JFrame jf = new JFrame();
+		jf.setTitle("Kovarianz-Matrix des Portfolios");
+		jf.setSize(500, 500);
+		jf.setVisible(true);
+		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		jf.add(table);
+		
+		
+	}
 	
 
 }
