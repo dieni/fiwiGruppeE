@@ -20,13 +20,12 @@ public class StockCourse {
 	private String name;
 	private List<DailyValue> course;
 
-	public StockCourse(String csvPath) {
+	public StockCourse(File csvFile) {
 
 		course = new ArrayList<DailyValue>();
-		File f = new File(csvPath);
 
 		// Set name
-		setName(f.getName());
+		setName(csvFile.getName());
 
 		// Settings for reader.
 		BufferedReader br = null;
@@ -34,7 +33,7 @@ public class StockCourse {
 		String csvSplitBy = ",";
 
 		try {
-			br = new BufferedReader(new FileReader(f));
+			br = new BufferedReader(new FileReader(csvFile));
 			// Skip the first line.
 			br.readLine();
 

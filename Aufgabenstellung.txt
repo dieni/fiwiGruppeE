@@ -6,3 +6,88 @@ FIWI- Aufgabenstellung
 •	Zusammenstellen eines Portfolios aus Einzeltiteln und Ableiten einer Portfolio-Zeitreihe 
 •	Normalverteilungstest auch für das Portfolio 
 •	Ermitteln von Korrelation und Beta der Einzelzeitreihen mit dem Portfolio 
+
+
+
+
+Für einen Kurs:
+	Durchschnittsrendite
+	Volatilität
+	Normalverteilungstest (per button in neuem Fenster)
+	Ermitteln von Korrelation und Beta der Einzelzeitreihen mit dem Portfolio 
+
+
+
+
+Für Portfolio:
+	Durchschnittsrendite
+	Volatilität
+	Kovarianzmatrix (per button in neuem Fenster)
+	Normalverteilungstest (per button in neuem Fenster)
+
+
+
+
+
+
+
+
+
+public class Main {
+	
+	
+
+	public static void main(String[] args) throws InterruptedException, IOException {
+
+		String header = "##########################################################################################"
+				+ '\n' + "###################################" + " ZEITREIHENANALYSE  "
+				+ "###################################" + '\n'
+				+ "##########################################################################################" + '\n';
+
+		String mainMenu = "(1) Zeitreihe zu Portfolio hinzufügen \n" + "(2) Portfolio anzeigen \n" + "(0) Beenden" + "(menu) Hauptmenue";
+
+		
+		
+		
+		String auswahl = "menu";
+		while (!auswahl.equals("0")) {
+			
+			System.out.println(header);
+			switch (auswahl) {
+			case "menu":
+				System.out.println(mainMenu);
+				auswahl = auswahl();
+
+				break;
+			default:
+				System.out.println("Ungueltige Eingabe!");
+				System.out.println(header);
+				System.out.println(mainMenu);
+				auswahl = auswahl();
+				break;
+			}
+		}
+
+
+	}
+
+	/**
+	 * Handles input from user
+	 * @return choice
+	 */
+	public static String auswahl(){
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String eingabe = "";
+		System.out.print("Auswahl: ");
+		
+		try {
+			eingabe = br.readLine();
+			
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return eingabe;
+	}
+}

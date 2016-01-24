@@ -1,6 +1,5 @@
 package fiwiGruppeE;
 
-import java.awt.print.PrinterException;
 import java.util.ArrayList;
 import java.util.List;
 
