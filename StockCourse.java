@@ -8,6 +8,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.math3.stat.StatUtils;
+import org.apache.commons.math3.stat.correlation.Covariance;
+import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
+import org.apache.commons.math3.stat.descriptive.moment.Variance;
+
 /**
  * 
  * @author Christian Dienbauer
@@ -19,6 +24,7 @@ public class StockCourse {
 
 	private String name;
 	private List<DailyValue> course;
+	private Portfolio portfolio = Portfolio.getInstance();
 
 	public StockCourse(File csvFile) {
 
@@ -95,26 +101,86 @@ public class StockCourse {
 	/**
 	 * Calculate the mean of the course.
 	 */
-	public float getMean() {
+	public double getMean() {
 		Statistics s = new Statistics(this);
 		return s.getMean();
 
 	}
-	
-	public float getVariance(){
+
+	public double getVariance() {
 		Statistics s = new Statistics(this);
 		return s.getVariance();
 	}
 
-	public float getVolatility() {
+	public double getVolatility() {
 		Statistics s = new Statistics(this);
 		return s.getStdDev();
 	}
 
-	public float getCovariance(StockCourse sC) {
+	public double getCovariance(StockCourse sC) {
 		Statistics s = new Statistics(this);
 		return s.getCovariance(sC);
 
+	}
+
+	public double getDWValue() {
+		int n = course.size();
+
+		double numerator = 0;
+		double denumerator = 0;
+
+		double residual;
+		double previousResidual;
+
+		for (int i = 0; i < n; i++) {
+			residual = course.get(i).getValue();
+
+			if (i > 0) {
+				previousResidual = course.get(i - 1).getValue();
+				numerator += Math.pow(residual - previousResidual, 2);
+			}
+
+			denumerator += residual * residual;
+		}
+
+		double dwValue = numerator / denumerator;
+		return dwValue;
+	}
+
+	public double getDailyMeanR() {
+		double r = 0;
+
+		for (int i = 1; i < course.size(); i++) {
+			r += (course.get(i).getValue() - course.get(i - 1).getValue());
+		}
+		
+		return r/(course.size()-1);
+	}
+
+	public double getCorrelation() {
+
+		PearsonsCorrelation pc = new PearsonsCorrelation();
+		double courseArray[] = new double[course.size()];
+
+		for (int i = 0; i < course.size(); i++) {
+			courseArray[i] = course.get(i).getValue();
+		}
+
+		return pc.correlation(courseArray, portfolio.getPortfolioZeitreihe());
+
+	}
+
+	public double getBeta() {
+		double courseArray[] = new double[course.size()];
+
+		for (int i = 0; i < course.size(); i++) {
+			courseArray[i] = course.get(i).getValue();
+		}
+		System.out.println(StatUtils.populationVariance(portfolio.getPortfolioZeitreihe()));
+
+		Covariance covariance = new Covariance();
+		double cov = covariance.covariance(courseArray, portfolio.getPortfolioZeitreihe());
+		return cov / StatUtils.variance(portfolio.getPortfolioZeitreihe());
 	}
 
 }

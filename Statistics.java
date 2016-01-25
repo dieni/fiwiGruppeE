@@ -19,9 +19,9 @@ public class Statistics {
 		setSize(sC.getCourse().size());
 	}
 
-	float getMean() {
+	double getMean() {
 
-		float sum = 0;
+		double sum = 0;
 
 		for (DailyValue dV : course) {
 			sum += dV.getValue();
@@ -30,9 +30,9 @@ public class Statistics {
 		return sum / size;
 	}
 
-	float getVariance() {
-		float mean = getMean();
-		float temp = 0;
+	double getVariance() {
+		double mean = getMean();
+		double temp = 0;
 
 		for (DailyValue dV : course) {
 			temp += (mean - dV.getValue()) * (mean - dV.getValue());
@@ -45,16 +45,16 @@ public class Statistics {
 	 * 
 	 * @return Volatility of a stock course.
 	 */
-	float getStdDev() {
-		return (float) Math.sqrt(getVariance());
+	double getStdDev() {
+		return Math.sqrt(getVariance());
 	}
 
-	float getCovariance(StockCourse sC) {
+	double getCovariance(StockCourse sC) {
 		Statistics sCS = new Statistics(sC);
 
-		float mean1 = getMean();
-		float mean2 = sCS.getMean();
-		float temp = 0;
+		double mean1 = getMean();
+		double mean2 = sCS.getMean();
+		double temp = 0;
 		int count = 0;
 
 		for (DailyValue dV : course) {
