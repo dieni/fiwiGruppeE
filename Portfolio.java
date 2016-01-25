@@ -9,6 +9,8 @@ import javax.swing.table.DefaultTableModel;
 
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 
+import javafx.scene.control.TableView;
+
 /**
  * 
  * @author Christian Dienbauer
@@ -20,9 +22,10 @@ public class Portfolio {
 
 	List<StockCourse> courses = new ArrayList<StockCourse>();
 	double[] portfolioZeitreihe;
-	public double[] getPortfolioZeitreihe() {
-		return portfolioZeitreihe;
-	}
+	
+	
+	
+	
 
 	private static Portfolio instance = null;
 	
@@ -104,6 +107,14 @@ public class Portfolio {
 		jf.setVisible(true);
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jf.add(table);
+		
+		TableView tableCov = new TableView();
+		tableCov.setEditable(false);
+		
+		
+		
+		
+		
 
 	}
 
@@ -137,6 +148,10 @@ public class Portfolio {
 	public double getVolatility(){
 		StandardDeviation sd = new StandardDeviation(false);
 		return sd.evaluate(portfolioZeitreihe);
+	}
+	
+	public double[] getPortfolioZeitreihe() {
+		return portfolioZeitreihe;
 	}
 
 }

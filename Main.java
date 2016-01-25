@@ -35,6 +35,7 @@ public class Main extends Application {
 	static private VBox vboxCenter = new VBox();
 	Button portfolioButton;
 	Button csvButton;
+	Button covMatrixButton;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -95,6 +96,14 @@ public class Main extends Application {
 
 		});
 
+		covMatrixButton = new Button();
+		covMatrixButton.setText("Kovarianzmatrix");
+		covMatrixButton.setFont(Font.font("Arial", FontWeight.BOLD, 12));
+		covMatrixButton.setPrefWidth(100);
+		covMatrixButton.setOnAction(e->{
+			
+		});
+		
 		// Define button for CSV-Import
 		csvButton = new Button();
 		csvButton.setText("Import CSV");
@@ -117,6 +126,8 @@ public class Main extends Application {
 			}
 
 		});
+		
+		
 
 		// Window preferences
 		Scene scene = new Scene(border, 600, 480);
@@ -160,6 +171,7 @@ public class Main extends Application {
 		vboxCenter.getChildren().clear();
 		vboxCenter.getChildren().add(csvButton);
 		vboxCenter.getChildren().add(new Text(name));
+		vboxCenter.getChildren().add(covMatrixButton);
 	}
 
 	
