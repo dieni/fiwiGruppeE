@@ -7,6 +7,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -14,6 +16,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionModel;
 import javafx.scene.control.cell.ComboBoxListCell;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
@@ -27,9 +30,9 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-	
-
 	static private Portfolio portfolio = new Portfolio();
+	static private VBox vboxLeft = new VBox();
+	static private VBox vboxCenter = new VBox();	
 	Button portfolioButton;
 	Button csvButton;
 
@@ -39,40 +42,47 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryWindow) throws Exception {
-		
+
 		final FileChooser fileChooser = new FileChooser();
 
 		// Define layout
-		VBox vboxLeft = new VBox();
 		vboxLeft.setPadding(new Insets(10));
 		vboxLeft.setSpacing(8);
 
-		VBox vboxCenter = new VBox();
+		
 		vboxCenter.setPadding(new Insets(10));
 		vboxCenter.setSpacing(8);
 
-		// Populate portfolio list
-		
+		// Define portfolio list
 		ObservableList<String> coursesNames = FXCollections.observableArrayList();
 		ObservableList<StockCourse> coursesData = FXCollections.observableArrayList();
 		ListView<String> list = new ListView<String>();
 		list.setPrefWidth(100);
 		list.setPrefHeight(1000);
 		list.setItems(coursesNames);
-		//list.setCellFactory(ComboBoxListCell.forListView(coursesData.));
-
-		//delete this!!
-		File f = new File("C:/Users/Dieni/Documents/eclipseWorkspace/Zeitreihenanalyse/src/apple0914.csv");
-		portfolio.addStockCourse(new StockCourse(f));
 		
-		for(StockCourse sC : portfolio.getCourses()){
-			coursesNames.add(sC.getName());
-		}
+		//Listens for the selected ITEM in the list		
+		list.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>(){
+			public void changed(ObservableValue<? extends String> ov, String old_val, String new_val){
+				//System.out.println(new_val);
+				//vboxCenter.getChildren().clear();
+				//vboxCenter.getChildren().add(new Text(new_val));
+			}
+		});
 		
-		// list.getSelectionModel().getSelectedItem();
-
+		//Listens for the selected POSITION in the list	
+		list.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Object>(){
+			@Override
+			public void changed(ObservableValue<?> observable, Object oldIndex, Object newIndex) {
+				//System.out.println(newValue);
+				showDetailsCourse(newIndex);
+			}
+		});
+		
+		
 		BorderPane border = new BorderPane();
 		border.setLeft(vboxLeft);
+		border.setCenter(vboxCenter);
 
 		// Define button for portfolio view
 		portfolioButton = new Button();
@@ -81,12 +91,9 @@ public class Main extends Application {
 		portfolioButton.setPrefWidth(100);
 		vboxLeft.getChildren().add(portfolioButton);
 		vboxLeft.getChildren().add(list);
-		
-		
 
 		portfolioButton.setOnAction(e -> { // Lambda expression FREAKIN AWESOME
-			border.setCenter(vboxCenter);
-			System.out.println("Links to portfolio view");
+			showDetailsPortfolio();
 			
 		});
 
@@ -96,24 +103,23 @@ public class Main extends Application {
 		csvButton.setFont(Font.font("Arial", FontWeight.BOLD, 12));
 		csvButton.setPrefWidth(100);
 		csvButton.setOnAction(e -> {
-			
+
 			File file = fileChooser.showOpenDialog(primaryWindow);
 			if (file != null) {
 				portfolio.addStockCourse(new StockCourse(file));
+
 				System.out.println("CSV has been added.");
 				
+				for (StockCourse sC : portfolio.getCourses()) {
+					if (!coursesNames.contains(sC.getName()))
+						coursesNames.add(sC.getName());
+				}
+				
+				list.setItems(coursesNames);
 			}
 
-			
 		});
 
-		vboxCenter.getChildren().add(csvButton);
-		
-
-		// ################################################################################
-		// Auswahl
-
-		// ################################################################################
 
 		// Window preferences
 		Scene scene = new Scene(border, 600, 480);
@@ -121,7 +127,29 @@ public class Main extends Application {
 		primaryWindow.setScene(scene);
 		primaryWindow.show();
 	}
-
-
 	
+	
+	/**
+	 * Refreshes the center of the BorderPane in stock course view
+	 * @param index
+	 */
+	public void showDetailsCourse(Object index){
+		String courseName = portfolio.getCourses().get(Integer.parseInt(index.toString())).getName();
+		
+		vboxCenter.getChildren().clear();
+		vboxCenter.getChildren().add(new Text(courseName));		
+	}
+	
+	/**
+	 * Refreshes the center of the BoderPane in portfolio view
+	 */
+	public void showDetailsPortfolio(){
+		String name = "PORTFOLIO";
+		
+		vboxCenter.getChildren().clear();
+		vboxCenter.getChildren().add(csvButton);
+		vboxCenter.getChildren().add(new Text(name));
+	}
+	
+
 }
