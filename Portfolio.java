@@ -22,19 +22,15 @@ public class Portfolio {
 
 	List<StockCourse> courses = new ArrayList<StockCourse>();
 	double[] portfolioZeitreihe;
-	
-	
-	
-	
 
 	private static Portfolio instance = null;
-	
-	private Portfolio(){
-		
+
+	private Portfolio() {
+
 	}
-	
-	public static Portfolio getInstance(){
-		if(instance == null) {
+
+	public static Portfolio getInstance() {
+		if (instance == null) {
 			instance = new Portfolio();
 		}
 		return instance;
@@ -86,14 +82,19 @@ public class Portfolio {
 
 			data[i++] = sC.getName();
 			// Insert data
-			tableModel.addRow(data);
+
 		}
 
+		tableModel.addRow(data);
+
 		// Generate covariance-matrix
+
 		for (StockCourse sC : courses) {
 			i = 0; // reset counter
+
 			data[i++] = sC.getName();
 			for (StockCourse sC2 : courses) {
+
 				data[i++] = sC.getCovariance(sC2);
 			}
 			// Insert data
@@ -105,17 +106,8 @@ public class Portfolio {
 		jf.setTitle("Kovarianz-Matrix des Portfolios");
 		jf.setSize(500, 500);
 		jf.setVisible(true);
-		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		// jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jf.add(table);
-		
-		TableView tableCov = new TableView();
-		tableCov.setEditable(false);
-		
-		
-		
-		
-		
-
 	}
 
 	public void berechnePortfolioZeitreihe() {
@@ -134,24 +126,63 @@ public class Portfolio {
 		}
 
 	}
-	
+
 	public double getDailyMeanR() {
 		double r = 0;
 
 		for (int i = 1; i < portfolioZeitreihe.length; i++) {
-			r += (portfolioZeitreihe[i] - portfolioZeitreihe[i-1]);
+			r += (portfolioZeitreihe[i] - portfolioZeitreihe[i - 1]);
 		}
-		
-		return r/(portfolioZeitreihe.length-1);
+
+		return r / (portfolioZeitreihe.length - 1);
 	}
-	
-	public double getVolatility(){
+
+	public double getVolatility() {
 		StandardDeviation sd = new StandardDeviation(false);
 		return sd.evaluate(portfolioZeitreihe);
 	}
-	
+
 	public double[] getPortfolioZeitreihe() {
 		return portfolioZeitreihe;
 	}
+	
+	public ArrayList<Count> getDate(double[] stockCourse){
+		double[] stockCourseRounded=new double[stockCourse.length];
+		ArrayList<Count> count=new ArrayList<Count>();
+		
+		
+		// Round stockCourse array
+		for( int i=0; i<stockCourse.length; i++){
+			stockCourseRounded[i]=Math.round(stockCourse[i]*100)/100.0;
+			System.out.println(i + " " + stockCourseRounded[i]);
+		}
+			
+		// distribute values in classes
+		for(int i=0; i<stockCourseRounded.length; i++){
+			count.add(new Count(stockCourseRounded[i]));
+			for(int j=0; j<stockCourseRounded.length; j++){
+				if(count.get(i).getValue()==stockCourseRounded[j]){
+					count.get(i).countUp();
+				}
+			}
+		}
+		
+		//System.out.println("value: " + count.get(613).getValue() + " Wie oft: " + count.get(613).getCount());
+		
+		// Delete duplicated entries
+		for(int i=0; i<count.size()-1; i++){
+			if(count.get(i).getValue()==count.get(i+1).getValue()){
+				count.remove(i);
+				i--;			
+			}
+		}
+		
+		for(int i=0; i<count.size(); i++){
+			System.out.println("Value: " + count.get(i).getValue() + " Anzahl: " +  count.get(i).getCount());
+		}
+		return count;
+	}
+	
+	
 
 }

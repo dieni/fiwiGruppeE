@@ -3,6 +3,7 @@ package fiwiGruppeE;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,6 +15,10 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Data;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionModel;
@@ -36,6 +41,7 @@ public class Main extends Application {
 	Button portfolioButton;
 	Button csvButton;
 	Button covMatrixButton;
+	Button plotNormvButton;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -93,17 +99,28 @@ public class Main extends Application {
 
 		portfolioButton.setOnAction(e -> { // Lambda expression FREAKIN AWESOME
 			showDetailsPortfolio();
+			drawDistributionPort();
 
 		});
 
+		// Define button for covariance matrix
 		covMatrixButton = new Button();
 		covMatrixButton.setText("Kovarianzmatrix");
 		covMatrixButton.setFont(Font.font("Arial", FontWeight.BOLD, 12));
 		covMatrixButton.setPrefWidth(100);
-		covMatrixButton.setOnAction(e->{
-			
+		covMatrixButton.setOnAction(e -> {
+			portfolio.displayCovarianceMatrix();
 		});
-		
+
+		// Define button for normal distribution plot
+		plotNormvButton = new Button();
+		plotNormvButton.setText("Plot-Normalverteilungstest");
+		plotNormvButton.setFont(Font.font("Arial", FontWeight.BOLD, 12));
+		plotNormvButton.setPrefWidth(100);
+		plotNormvButton.setOnAction(e -> {
+			// portfolio.drawDistribution();
+		});
+
 		// Define button for CSV-Import
 		csvButton = new Button();
 		csvButton.setText("Import CSV");
@@ -126,8 +143,6 @@ public class Main extends Application {
 			}
 
 		});
-		
-		
 
 		// Window preferences
 		Scene scene = new Scene(border, 600, 480);
@@ -138,28 +153,28 @@ public class Main extends Application {
 
 	/**
 	 * Refreshes the center of the BorderPane in stock course view
+	 * 
 	 * @param index
 	 */
-	public void showDetailsCourse(Object index){
-		StockCourse sc = portfolio.getCourses().get(Integer.parseInt( index.toString() ));
-		
+	public void showDetailsCourse(Object index) {
+		StockCourse sc = portfolio.getCourses().get(Integer.parseInt(index.toString()));
+
 		Text courseName = new Text(sc.getName());
 		Text durchschnittsrendite = new Text("Durchschnittsrendite pro Tag: " + sc.getDailyMeanR());
-		Text volatilität = new Text ("Volatilität: " + sc.getVolatility());
-		
+		Text volatilität = new Text("Volatilität: " + sc.getVolatility());
+
 		Text autokorrelation = new Text("Durbin-Watson-Wert: " + sc.getDWValue());
 		Text korrelation = new Text("Korrelationkoeffizient zu Portfolio: " + sc.getCorrelation());
 		Text beta = new Text("Beta-Faktor zu Portfolio: " + sc.getBeta());
-		
-		
+
 		vboxCenter.getChildren().clear();
-		vboxCenter.getChildren().add(courseName);	
+		vboxCenter.getChildren().add(courseName);
 		vboxCenter.getChildren().add(durchschnittsrendite);
 		vboxCenter.getChildren().add(volatilität);
 		vboxCenter.getChildren().add(autokorrelation);
 		vboxCenter.getChildren().add(korrelation);
 		vboxCenter.getChildren().add(beta);
-		
+
 	}
 
 	/**
@@ -174,5 +189,37 @@ public class Main extends Application {
 		vboxCenter.getChildren().add(covMatrixButton);
 	}
 
-	
+	public void drawDistributionPort() {
+		if (!portfolio.getCourses().isEmpty()) {
+			NumberAxis xAxis = new NumberAxis();
+			NumberAxis yAxis = new NumberAxis();
+
+			LineChart<Number, Number> lineChart = new LineChart<Number, Number>(xAxis, yAxis);
+
+			lineChart.setTitle("Portfolio Distribution");
+			lineChart.setCreateSymbols(false);
+			lineChart.setPrefHeight(200);
+			lineChart.setPrefWidth(200);
+			
+			XYChart.Series<Number, Number> series = new XYChart.Series<Number, Number>();
+			series.setName("Portfolio");
+
+			ArrayList<Count> portfolioClassified = portfolio.getDate(portfolio.getPortfolioZeitreihe());
+
+			for (Count c : portfolioClassified) {
+
+				series.getData().add(new Data<Number, Number>(c.value, c.count));
+			}
+
+			lineChart.getData().add(series);
+			
+
+			vboxCenter.getChildren().add(lineChart);
+		}
+	}
+
+	public void drawDistributionStock() {
+
+	}
+
 }
