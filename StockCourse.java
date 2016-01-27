@@ -150,10 +150,10 @@ public class StockCourse {
 		double r = 0;
 
 		for (int i = 1; i < course.size(); i++) {
-			r += (course.get(i).getValue() - course.get(i - 1).getValue());
+			r += ((course.get(i).getValue() / course.get(i - 1).getValue()))-1;
 		}
 
-		return r / (course.size() - 1);
+		return r /course.size();
 	}
 
 	public double getCorrelation() {
@@ -175,7 +175,7 @@ public class StockCourse {
 		for (int i = 0; i < course.size(); i++) {
 			courseArray[i] = course.get(i).getValue();
 		}
-		//System.out.println(StatUtils.populationVariance(portfolio.getPortfolioZeitreihe()));
+		// System.out.println(StatUtils.populationVariance(portfolio.getPortfolioZeitreihe()));
 
 		Covariance covariance = new Covariance();
 		double cov = covariance.covariance(courseArray, portfolio.getPortfolioZeitreihe());
@@ -185,7 +185,7 @@ public class StockCourse {
 	public double[] getRenditen() {
 		double[] renditen = new double[course.size() - 1];
 		for (int i = 1; i < course.size(); i++) {
-			renditen[i - 1] = course.get(i).getValue() - course.get(i - 1).getValue();
+			renditen[i - 1] = ((course.get(i).getValue() / course.get(i - 1).getValue())) - 1;
 		}
 		return renditen;
 	}

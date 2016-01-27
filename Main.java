@@ -133,7 +133,7 @@ public class Main extends Application {
 		String mrWatson = df.format(sc.getDWValue());
 		String correlat = df.format(sc.getCorrelation());
 		String betafakt = df.format(sc.getBeta());
-		String kolmogor = df.format(new KolmogorovSmirnovTest().kolmogorovSmirnovTest(new NormalDistribution(), sc.getRenditen()));
+		//String kolmogor = df.format(new KolmogorovSmirnovTest().kolmogorovSmirnovTest(new NormalDistribution(), sc.getRenditen()));
 		
 		Text courseName = new Text(sc.getName());
 		courseName.setFont(Font.font("Arial", FontWeight.BOLD, 12));
@@ -145,7 +145,7 @@ public class Main extends Application {
 		Text beta = new Text("Beta-Faktor zu Portfolio: " + betafakt);
 
 		Text ks = new Text("p-Wert K-S-Test: "
-				+ kolmogor);
+				+ new KolmogorovSmirnovTest().kolmogorovSmirnovTest(new NormalDistribution(), sc.getRenditen()));
 
 		vboxCenter.getChildren().clear();
 		vboxCenter.getChildren().add(courseName);
@@ -173,9 +173,10 @@ public class Main extends Application {
 
 		if (!portfolio.getCourses().isEmpty()) {
 			drendite = df.format(portfolio.getDailyMeanR());
+			
 			volatili = df.format(portfolio.getVolatility());
 		}
-		durchschnittsrendite = new Text("Durchschnittsrendite pro Tag: EUR " + drendite);
+		durchschnittsrendite = new Text("Durchschnittsrendite pro Tag: " + drendite);
 		volatilitaet = new Text("Volatilität: " + volatili);
 
 		vboxCenter.getChildren().clear();

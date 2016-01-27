@@ -2,7 +2,6 @@ package fiwiGruppeE;
 
 import org.apache.commons.math3.random.EmpiricalDistribution;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
-import org.apache.commons.math3.stat.descriptive.moment.Mean;
 
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;

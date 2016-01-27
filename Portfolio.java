@@ -9,7 +9,6 @@ import javax.swing.table.DefaultTableModel;
 
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 
-
 /**
  * 
  * @author Christian Dienbauer
@@ -22,8 +21,6 @@ public class Portfolio {
 	List<StockCourse> courses = new ArrayList<StockCourse>();
 	double[] portfolioZeitreihe;
 
-	
-	
 	private static Portfolio instance = null;
 
 	private Portfolio() {
@@ -129,13 +126,15 @@ public class Portfolio {
 	}
 
 	public double getDailyMeanR() {
+
 		double r = 0;
 
 		for (int i = 1; i < portfolioZeitreihe.length; i++) {
-			r += (portfolioZeitreihe[i] - portfolioZeitreihe[i - 1]);
+			r += ((portfolioZeitreihe[i] / portfolioZeitreihe[i - 1])) -1;
 		}
 
-		return r / (portfolioZeitreihe.length - 1);
+		return r /portfolioZeitreihe.length;
+
 	}
 
 	public double getVolatility() {
@@ -150,10 +149,9 @@ public class Portfolio {
 	public double[] getRenditen() {
 		double[] renditen = new double[portfolioZeitreihe.length - 1];
 		for (int i = 1; i < portfolioZeitreihe.length; i++) {
-			renditen[i - 1] = portfolioZeitreihe[i] - portfolioZeitreihe[i - 1];
+			renditen[i - 1] = (portfolioZeitreihe[i] / portfolioZeitreihe[i - 1]) - 1;
 		}
 		return renditen;
 	}
-
 
 }
