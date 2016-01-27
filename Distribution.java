@@ -2,6 +2,7 @@ package fiwiGruppeE;
 
 import org.apache.commons.math3.random.EmpiricalDistribution;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
+import org.apache.commons.math3.stat.descriptive.moment.Mean;
 
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -41,11 +42,10 @@ public class Distribution {
 		EmpiricalDistribution distribution = new EmpiricalDistribution(quantityClasses);
 		distribution.load(zeitreihe);
 		
-		double max = 0;
+		
 		//Feed table
 		int k = 0;
 		for (SummaryStatistics stats : distribution.getBinStats()) {
-			if(max < stats.getN()) max = stats.getN();
 			series.getData().add(new XYChart.Data<Number, Number>(k++, stats.getN()));
 		}
 

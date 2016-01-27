@@ -1,9 +1,7 @@
 package fiwiGruppeE;
 
-
 import java.io.File;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.stat.inference.KolmogorovSmirnovTest;
@@ -35,7 +33,7 @@ public class Main extends Application {
 	Button csvButton;
 	Button covMatrixButton;
 	Button plotNormvButton;
-	NumberFormat f = new DecimalFormat("#0.00");  
+	DecimalFormat df = new DecimalFormat("#0.0000");
 
 	public static void main(String[] args) {
 		launch(args);
@@ -94,15 +92,6 @@ public class Main extends Application {
 			portfolio.displayCovarianceMatrix();
 		});
 
-		// Define button for normal distribution plot
-		plotNormvButton = new Button();
-		plotNormvButton.setText("Plot-Normalverteilungstest");
-		plotNormvButton.setFont(Font.font("Arial", FontWeight.BOLD, 12));
-		plotNormvButton.setPrefWidth(100);
-		plotNormvButton.setOnAction(e -> {
-			// portfolio.drawDistribution();
-		});
-
 		// Define button for CSV-Import
 		csvButton = new Button();
 		csvButton.setText("Import CSV");
@@ -139,16 +128,24 @@ public class Main extends Application {
 	public void showDetailsCourse(Object index) {
 		StockCourse sc = portfolio.getCourses().get(Integer.parseInt(index.toString()));
 
+		String drendite = df.format(sc.getDailyMeanR());
+		String volatili = df.format(sc.getVolatility());
+		String mrWatson = df.format(sc.getDWValue());
+		String correlat = df.format(sc.getCorrelation());
+		String betafakt = df.format(sc.getBeta());
+		String kolmogor = df.format(new KolmogorovSmirnovTest().kolmogorovSmirnovTest(new NormalDistribution(), sc.getRenditen()));
+		
 		Text courseName = new Text(sc.getName());
-		Text durchschnittsrendite = new Text("Durchschnittsrendite pro Tag: " + sc.getDailyMeanR());
-		Text volatilitaet = new Text("Volatilität: " + sc.getVolatility());
+		courseName.setFont(Font.font("Arial", FontWeight.BOLD, 12));
+		Text durchschnittsrendite = new Text("Durchschnittsrendite pro Tag: " + drendite);
+		Text volatilitaet = new Text("Volatilität: " + volatili);
 
-		Text autokorrelation = new Text("Durbin-Watson-Wert: " + sc.getDWValue());
-		Text korrelation = new Text("Korrelationkoeffizient zu Portfolio: " + sc.getCorrelation());
-		Text beta = new Text("Beta-Faktor zu Portfolio: " + sc.getBeta());
+		Text autokorrelation = new Text("Durbin-Watson-Wert: " + mrWatson);
+		Text korrelation = new Text("Korrelationkoeffizient zu Portfolio: " + correlat);
+		Text beta = new Text("Beta-Faktor zu Portfolio: " + betafakt);
 
 		Text ks = new Text("p-Wert K-S-Test: "
-				+ new KolmogorovSmirnovTest().kolmogorovSmirnovTest(new NormalDistribution(), sc.getRenditen()));
+				+ kolmogor);
 
 		vboxCenter.getChildren().clear();
 		vboxCenter.getChildren().add(courseName);
@@ -159,7 +156,7 @@ public class Main extends Application {
 		vboxCenter.getChildren().add(beta);
 		vboxCenter.getChildren().add(ks);
 		vboxCenter.getChildren().add(Distribution.getDistributionChart(sc.getRenditen(), 50));
-				
+
 	}
 
 	/**
@@ -167,17 +164,29 @@ public class Main extends Application {
 	 */
 	public void showDetailsPortfolio() {
 		Text name = new Text("Portfolio");
-		Text durchschnittsrendite = new Text("Durchschnittsrendite pro Tag: " + portfolio.getDailyMeanR());
-		Text volatilitaet = new Text("Volatilität: " + portfolio.getVolatility());
+		name.setFont(Font.font("Arial", FontWeight.BOLD, 12));
+		Text durchschnittsrendite = null;
+		Text volatilitaet = null;
+
+		String drendite = "";
+		String volatili = "";
+
+		if (!portfolio.getCourses().isEmpty()) {
+			drendite = df.format(portfolio.getDailyMeanR());
+			volatili = df.format(portfolio.getVolatility());
+		}
+		durchschnittsrendite = new Text("Durchschnittsrendite pro Tag: EUR " + drendite);
+		volatilitaet = new Text("Volatilität: " + volatili);
 
 		vboxCenter.getChildren().clear();
 		vboxCenter.getChildren().add(csvButton);
 		vboxCenter.getChildren().add(name);
+
 		vboxCenter.getChildren().add(durchschnittsrendite);
 		vboxCenter.getChildren().add(volatilitaet);
-			
+
 		vboxCenter.getChildren().add(covMatrixButton);
-		if(!portfolio.getCourses().isEmpty())
+		if (!portfolio.getCourses().isEmpty())
 			vboxCenter.getChildren().add(Distribution.getDistributionChart(portfolio.getRenditen(), 50));
 	}
 
