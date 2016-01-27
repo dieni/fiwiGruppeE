@@ -1,6 +1,8 @@
 package fiwiGruppeE;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -49,6 +51,8 @@ public class Portfolio {
 	 */
 	public void addStockCourse(StockCourse sC) {
 
+		Collections.reverse(sC.getCourse());
+		
 		courses.add(sC);
 		berechnePortfolioZeitreihe();
 	}
