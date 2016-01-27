@@ -9,7 +9,6 @@ import javax.swing.table.DefaultTableModel;
 
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 
-import javafx.scene.control.TableView;
 
 /**
  * 
@@ -23,6 +22,8 @@ public class Portfolio {
 	List<StockCourse> courses = new ArrayList<StockCourse>();
 	double[] portfolioZeitreihe;
 
+	
+	
 	private static Portfolio instance = null;
 
 	private Portfolio() {
@@ -145,44 +146,14 @@ public class Portfolio {
 	public double[] getPortfolioZeitreihe() {
 		return portfolioZeitreihe;
 	}
-	
-	public ArrayList<Count> getDate(double[] stockCourse){
-		double[] stockCourseRounded=new double[stockCourse.length];
-		ArrayList<Count> count=new ArrayList<Count>();
-		
-		
-		// Round stockCourse array
-		for( int i=0; i<stockCourse.length; i++){
-			stockCourseRounded[i]=Math.round(stockCourse[i]*100)/100.0;
-			System.out.println(i + " " + stockCourseRounded[i]);
+
+	public double[] getRenditen() {
+		double[] renditen = new double[portfolioZeitreihe.length - 1];
+		for (int i = 1; i < portfolioZeitreihe.length; i++) {
+			renditen[i - 1] = portfolioZeitreihe[i] - portfolioZeitreihe[i - 1];
 		}
-			
-		// distribute values in classes
-		for(int i=0; i<stockCourseRounded.length; i++){
-			count.add(new Count(stockCourseRounded[i]));
-			for(int j=0; j<stockCourseRounded.length; j++){
-				if(count.get(i).getValue()==stockCourseRounded[j]){
-					count.get(i).countUp();
-				}
-			}
-		}
-		
-		//System.out.println("value: " + count.get(613).getValue() + " Wie oft: " + count.get(613).getCount());
-		
-		// Delete duplicated entries
-		for(int i=0; i<count.size()-1; i++){
-			if(count.get(i).getValue()==count.get(i+1).getValue()){
-				count.remove(i);
-				i--;			
-			}
-		}
-		
-		for(int i=0; i<count.size(); i++){
-			System.out.println("Value: " + count.get(i).getValue() + " Anzahl: " +  count.get(i).getCount());
-		}
-		return count;
+		return renditen;
 	}
-	
-	
+
 
 }

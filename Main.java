@@ -1,11 +1,12 @@
 package fiwiGruppeE;
 
-import java.awt.Desktop;
+
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
+import org.apache.commons.math3.distribution.NormalDistribution;
+import org.apache.commons.math3.stat.inference.KolmogorovSmirnovTest;
 
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -13,19 +14,11 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
+
 import javafx.scene.Scene;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
-import javafx.scene.chart.XYChart.Data;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionModel;
-import javafx.scene.control.cell.ComboBoxListCell;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -42,6 +35,7 @@ public class Main extends Application {
 	Button csvButton;
 	Button covMatrixButton;
 	Button plotNormvButton;
+	NumberFormat f = new DecimalFormat("#0.00");  
 
 	public static void main(String[] args) {
 		launch(args);
@@ -61,26 +55,15 @@ public class Main extends Application {
 
 		// Define portfolio list
 		ObservableList<String> coursesNames = FXCollections.observableArrayList();
-		ObservableList<StockCourse> coursesData = FXCollections.observableArrayList();
 		ListView<String> list = new ListView<String>();
 		list.setPrefWidth(100);
 		list.setPrefHeight(1000);
 		list.setItems(coursesNames);
 
-		// Listens for the selected ITEM in the list
-		list.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-			public void changed(ObservableValue<? extends String> ov, String old_val, String new_val) {
-				// System.out.println(new_val);
-				// vboxCenter.getChildren().clear();
-				// vboxCenter.getChildren().add(new Text(new_val));
-			}
-		});
-
 		// Listens for the selected POSITION in the list
 		list.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Object>() {
 			@Override
 			public void changed(ObservableValue<?> observable, Object oldIndex, Object newIndex) {
-				// System.out.println(newValue);
 				showDetailsCourse(newIndex);
 			}
 		});
@@ -99,7 +82,6 @@ public class Main extends Application {
 
 		portfolioButton.setOnAction(e -> { // Lambda expression FREAKIN AWESOME
 			showDetailsPortfolio();
-			drawDistributionPort();
 
 		});
 
@@ -132,8 +114,6 @@ public class Main extends Application {
 			if (file != null) {
 				portfolio.addStockCourse(new StockCourse(file));
 
-				System.out.println("CSV has been added.");
-
 				for (StockCourse sC : portfolio.getCourses()) {
 					if (!coursesNames.contains(sC.getName()))
 						coursesNames.add(sC.getName());
@@ -161,65 +141,44 @@ public class Main extends Application {
 
 		Text courseName = new Text(sc.getName());
 		Text durchschnittsrendite = new Text("Durchschnittsrendite pro Tag: " + sc.getDailyMeanR());
-		Text volatilität = new Text("Volatilität: " + sc.getVolatility());
+		Text volatilitaet = new Text("Volatilität: " + sc.getVolatility());
 
 		Text autokorrelation = new Text("Durbin-Watson-Wert: " + sc.getDWValue());
 		Text korrelation = new Text("Korrelationkoeffizient zu Portfolio: " + sc.getCorrelation());
 		Text beta = new Text("Beta-Faktor zu Portfolio: " + sc.getBeta());
 
+		Text ks = new Text("p-Wert K-S-Test: "
+				+ new KolmogorovSmirnovTest().kolmogorovSmirnovTest(new NormalDistribution(), sc.getRenditen()));
+
 		vboxCenter.getChildren().clear();
 		vboxCenter.getChildren().add(courseName);
 		vboxCenter.getChildren().add(durchschnittsrendite);
-		vboxCenter.getChildren().add(volatilität);
+		vboxCenter.getChildren().add(volatilitaet);
 		vboxCenter.getChildren().add(autokorrelation);
 		vboxCenter.getChildren().add(korrelation);
 		vboxCenter.getChildren().add(beta);
-
+		vboxCenter.getChildren().add(ks);
+		vboxCenter.getChildren().add(Distribution.getDistributionChart(sc.getRenditen(), 50));
+				
 	}
 
 	/**
 	 * Refreshes the center of the BoderPane in portfolio view
 	 */
 	public void showDetailsPortfolio() {
-		String name = "PORTFOLIO";
+		Text name = new Text("Portfolio");
+		Text durchschnittsrendite = new Text("Durchschnittsrendite pro Tag: " + portfolio.getDailyMeanR());
+		Text volatilitaet = new Text("Volatilität: " + portfolio.getVolatility());
 
 		vboxCenter.getChildren().clear();
 		vboxCenter.getChildren().add(csvButton);
-		vboxCenter.getChildren().add(new Text(name));
+		vboxCenter.getChildren().add(name);
+		vboxCenter.getChildren().add(durchschnittsrendite);
+		vboxCenter.getChildren().add(volatilitaet);
+			
 		vboxCenter.getChildren().add(covMatrixButton);
-	}
-
-	public void drawDistributionPort() {
-		if (!portfolio.getCourses().isEmpty()) {
-			NumberAxis xAxis = new NumberAxis();
-			NumberAxis yAxis = new NumberAxis();
-
-			LineChart<Number, Number> lineChart = new LineChart<Number, Number>(xAxis, yAxis);
-
-			lineChart.setTitle("Portfolio Distribution");
-			lineChart.setCreateSymbols(false);
-			lineChart.setPrefHeight(200);
-			lineChart.setPrefWidth(200);
-			
-			XYChart.Series<Number, Number> series = new XYChart.Series<Number, Number>();
-			series.setName("Portfolio");
-
-			ArrayList<Count> portfolioClassified = portfolio.getDate(portfolio.getPortfolioZeitreihe());
-
-			for (Count c : portfolioClassified) {
-
-				series.getData().add(new Data<Number, Number>(c.value, c.count));
-			}
-
-			lineChart.getData().add(series);
-			
-
-			vboxCenter.getChildren().add(lineChart);
-		}
-	}
-
-	public void drawDistributionStock() {
-
+		if(!portfolio.getCourses().isEmpty())
+			vboxCenter.getChildren().add(Distribution.getDistributionChart(portfolio.getRenditen(), 50));
 	}
 
 }

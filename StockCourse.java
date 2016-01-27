@@ -11,7 +11,6 @@ import java.util.List;
 import org.apache.commons.math3.stat.StatUtils;
 import org.apache.commons.math3.stat.correlation.Covariance;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
-import org.apache.commons.math3.stat.descriptive.moment.Variance;
 
 /**
  * 
@@ -153,8 +152,8 @@ public class StockCourse {
 		for (int i = 1; i < course.size(); i++) {
 			r += (course.get(i).getValue() - course.get(i - 1).getValue());
 		}
-		
-		return r/(course.size()-1);
+
+		return r / (course.size() - 1);
 	}
 
 	public double getCorrelation() {
@@ -176,11 +175,19 @@ public class StockCourse {
 		for (int i = 0; i < course.size(); i++) {
 			courseArray[i] = course.get(i).getValue();
 		}
-		System.out.println(StatUtils.populationVariance(portfolio.getPortfolioZeitreihe()));
+		//System.out.println(StatUtils.populationVariance(portfolio.getPortfolioZeitreihe()));
 
 		Covariance covariance = new Covariance();
 		double cov = covariance.covariance(courseArray, portfolio.getPortfolioZeitreihe());
 		return cov / StatUtils.variance(portfolio.getPortfolioZeitreihe());
+	}
+
+	public double[] getRenditen() {
+		double[] renditen = new double[course.size() - 1];
+		for (int i = 1; i < course.size(); i++) {
+			renditen[i - 1] = course.get(i).getValue() - course.get(i - 1).getValue();
+		}
+		return renditen;
 	}
 
 }
