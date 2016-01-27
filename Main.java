@@ -144,8 +144,8 @@ public class Main extends Application {
 		Text korrelation = new Text("Korrelationkoeffizient zu Portfolio: " + correlat);
 		Text beta = new Text("Beta-Faktor zu Portfolio: " + betafakt);
 
-		Text ks = new Text("p-Wert K-S-Test: "
-				+ new KolmogorovSmirnovTest().kolmogorovSmirnovTest(new NormalDistribution(), sc.getRenditen()));
+		Text ks = new Text("K-S-Test 95%: "
+				+ new KolmogorovSmirnovTest().kolmogorovSmirnovTest(new NormalDistribution(), sc.getRenditen(),0.05));
 
 		vboxCenter.getChildren().clear();
 		vboxCenter.getChildren().add(courseName);
