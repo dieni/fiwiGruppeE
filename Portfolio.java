@@ -133,7 +133,7 @@ public class Portfolio {
 			r += ((portfolioZeitreihe[i] / portfolioZeitreihe[i - 1])) -1;
 		}
 
-		return r /portfolioZeitreihe.length;
+		return r /portfolioZeitreihe.length *100; //in %
 
 	}
 

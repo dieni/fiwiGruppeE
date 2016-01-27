@@ -153,7 +153,7 @@ public class StockCourse {
 			r += ((course.get(i).getValue() / course.get(i - 1).getValue()))-1;
 		}
 
-		return r /course.size();
+		return r /course.size() *100; //%
 	}
 
 	public double getCorrelation() {
